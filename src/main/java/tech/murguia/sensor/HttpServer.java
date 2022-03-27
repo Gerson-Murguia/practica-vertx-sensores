@@ -6,7 +6,6 @@ import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.Router;
 
 public class HttpServer extends AbstractVerticle {
 
@@ -17,7 +16,7 @@ public class HttpServer extends AbstractVerticle {
       .requestHandler(this::handler)
       .listen(config().getInteger("port",8080))
       .onSuccess(httpServer -> {
-        System.out.println("Http server iniciado en"+httpServer.actualPort());
+        System.out.println("Http server iniciado en: "+httpServer.actualPort());
       })
       .onFailure(httpServer -> {
         System.out.println("Http server no se pudo iniciar: "+httpServer.getCause());
@@ -25,8 +24,8 @@ public class HttpServer extends AbstractVerticle {
   }
 
   private void handler(HttpServerRequest request) {
-    if ("/main".equals(request.path())){
-      request.response().sendFile("sensor/index.html");
+    if ("/".equals(request.path())){
+      request.response().sendFile("src/main/java/tech/murguia/sensor/index.html");
     }else if ("/sse".equals(request.path())){
       sse(request);
     }else{
