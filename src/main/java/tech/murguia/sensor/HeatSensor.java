@@ -18,7 +18,7 @@ public class HeatSensor extends AbstractVerticle {
         .listen(config().getInteger("http.port",3000));
     scheduleNextUpdate();
   }
-
+//para cada request envia su id y temperatura
   private void handlerRequest(HttpServerRequest request) {
     JsonObject data=new JsonObject()
       .put("id",sensorId)
