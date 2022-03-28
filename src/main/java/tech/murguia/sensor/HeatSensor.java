@@ -1,6 +1,7 @@
 package tech.murguia.sensor;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonObject;
 
 import java.util.Random;
@@ -12,7 +13,19 @@ public class HeatSensor extends AbstractVerticle {
   private double temperature=21.0;
   @Override
   public void start() {
+    vertx.createHttpServer()
+        .requestHandler(this::handlerRequest)
+        .listen(config().getInteger("http.port",3000));
     scheduleNextUpdate();
+  }
+
+  private void handlerRequest(HttpServerRequest request) {
+    JsonObject data=new JsonObject()
+      .put("id",sensorId)
+      .put("temp",temperature);
+    request.response()
+      .putHeader("Content-Type","application/json")
+      .end(data.encode());
   }
 
   private void scheduleNextUpdate() {
